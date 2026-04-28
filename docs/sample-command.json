@@ -1,0 +1,7 @@
+{
+  "mode": "manual",
+  "fan_on": true,
+  "fan_pwm": 200,
+  "source": "dashboard",
+  "timestamp": "2026-03-16T10:00:05Z"
+}

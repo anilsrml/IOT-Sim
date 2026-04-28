@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Akıllı Ev Otonom Havalandırma</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  </head>
+  <body>
+    <header class="header">
+      <h1>Akıllı Ev Otonom Havalandırma</h1>
+      <p>MQTT + JSON + Yerel Analiz Paneli</p>
+    </header>
+
+    <section class="cards" id="liveCards"></section>
+
+    <section class="stats-grid" id="statsGrid"></section>
+
+    <section class="charts-grid">
+      <article class="chart-card"><h3>Sıcaklık</h3><canvas id="sicaklikChart"></canvas></article>
+      <article class="chart-card"><h3>Nem</h3><canvas id="nemChart"></canvas></article>
+      <article class="chart-card"><h3>Işık</h3><canvas id="isikChart"></canvas></article>
+      <article class="chart-card"><h3>PM2.5</h3><canvas id="pm25Chart"></canvas></article>
+      <article class="chart-card"><h3>MQ-135 (ppm tahmin)</h3><canvas id="mq135Chart"></canvas></article>
+      <article class="chart-card"><h3>MQ-7 CO (ppm tahmin)</h3><canvas id="mq7Chart"></canvas></article>
+      <article class="chart-card"><h3>MQ-2 Gaz/Duman (ppm tahmin)</h3><canvas id="mq2Chart"></canvas></article>
+      <article class="chart-card"><h3>Fan PWM</h3><canvas id="fanPwmChart"></canvas></article>
+      <article class="chart-card"><h3>Karar Skoru</h3><canvas id="scoreChart"></canvas></article>
+      <article class="chart-card"><h3>Trend Skoru</h3><canvas id="trendScoreChart"></canvas></article>
+    </section>
+
+    <script src="/static/app.js"></script>
+  </body>
+  </html>

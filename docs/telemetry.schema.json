@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Smart Home Autonomous Ventilation Telemetry",
+  "type": "object",
+  "required": [
+    "sensor_id",
+    "values",
+    "unit",
+    "timestamp"
+  ],
+  "properties": {
+    "sensor_id": {
+      "type": "string",
+      "examples": [
+        "vent_01"
+      ]
+    },
+    "values": {
+      "type": "object",
+      "required": [
+        "sicaklik",
+        "nem",
+        "isik",
+        "pm25",
+        "mq135_ppm_est",
+        "mq7_ppm_est",
+        "mq2_ppm_est",
+        "fan_on",
+        "fan_pwm",
+        "buzzer_on"
+      ],
+      "properties": {
+        "sicaklik": { "type": "number" },
+        "nem": { "type": "number" },
+        "isik": { "type": "number" },
+        "pm25": { "type": "number" },
+        "mq135_ppm_est": { "type": "number" },
+        "mq7_ppm_est": { "type": "number" },
+        "mq2_ppm_est": { "type": "number" },
+        "fan_on": { "type": "boolean" },
+        "fan_pwm": { "type": "integer", "minimum": 0, "maximum": 255 },
+        "buzzer_on": { "type": "boolean" },
+        "decision_score": { "type": "number" },
+        "decision_mode": { "type": "string" },
+        "trend_score": { "type": "number" }
+      },
+      "additionalProperties": false
+    },
+    "unit": {
+      "type": "string",
+      "enum": ["metric"]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}

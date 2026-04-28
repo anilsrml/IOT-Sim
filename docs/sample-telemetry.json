@@ -1,0 +1,20 @@
+{
+  "sensor_id": "vent_01",
+  "values": {
+    "sicaklik": 24.5,
+    "nem": 65,
+    "isik": 450,
+    "pm25": 28,
+    "mq135_ppm_est": 2.1,
+    "mq7_ppm_est": 5.0,
+    "mq2_ppm_est": 6.8,
+    "fan_on": true,
+    "fan_pwm": 180,
+    "buzzer_on": false,
+    "decision_score": 0.57,
+    "trend_score": 0.51,
+    "decision_mode": "auto"
+  },
+  "unit": "metric",
+  "timestamp": "2026-03-16T10:00:00Z"
+}
