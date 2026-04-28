@@ -5,7 +5,7 @@ Akıllı ev otonom havalandırma simülasyonu (MQTT + JSON + Dashboard).
 ## Hızlı Başlatma (Windows / PowerShell)
 
 ```powershell
-cd "c:\Users\anil6\Desktop\IOT_sim"
+cd "IOT_sim"
 python -m venv .venv
 .\.venv\Scripts\activate
 pip install -r requirements.txt
