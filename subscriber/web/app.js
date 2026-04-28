@@ -1,8 +1,6 @@
 const metricDefs = [
   { key: "sicaklik", label: "Sıcaklık", unit: "°C", chartId: "sicaklikChart" },
   { key: "nem", label: "Nem", unit: "%", chartId: "nemChart" },
-  { key: "isik", label: "Işık", unit: "lux", chartId: "isikChart" },
-  { key: "pm25", label: "PM2.5", unit: "ug/m3", chartId: "pm25Chart" },
   { key: "mq135_ppm_est", label: "MQ-135", unit: "ppm", chartId: "mq135Chart" },
   { key: "mq7_ppm_est", label: "MQ-7", unit: "ppm", chartId: "mq7Chart" },
   { key: "mq2_ppm_est", label: "MQ-2", unit: "ppm", chartId: "mq2Chart" },
@@ -109,8 +107,6 @@ async function refresh() {
     cards.innerHTML =
       makeCard("Sıcaklık", `${Number(d.sicaklik).toFixed(1)} °C`) +
       makeCard("Nem", `${Number(d.nem).toFixed(1)} %`) +
-      makeCard("Işık", `${Number(d.isik).toFixed(0)} lux`) +
-      makeCard("PM2.5", `${Number(d.pm25).toFixed(1)} ug/m3`) +
       makeCard("MQ-135", `${Number(d.mq135_ppm_est).toFixed(2)} ppm`) +
       makeCard("MQ-7 (CO)", `${Number(d.mq7_ppm_est).toFixed(2)} ppm`) +
       makeCard("MQ-2 (Gaz/Duman)", `${Number(d.mq2_ppm_est).toFixed(2)} ppm`) +

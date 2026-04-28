@@ -20,8 +20,6 @@
       "required": [
         "sicaklik",
         "nem",
-        "isik",
-        "pm25",
         "mq135_ppm_est",
         "mq7_ppm_est",
         "mq2_ppm_est",
@@ -32,8 +30,6 @@
       "properties": {
         "sicaklik": { "type": "number" },
         "nem": { "type": "number" },
-        "isik": { "type": "number" },
-        "pm25": { "type": "number" },
         "mq135_ppm_est": { "type": "number" },
         "mq7_ppm_est": { "type": "number" },
         "mq2_ppm_est": { "type": "number" },

@@ -21,8 +21,6 @@ def resolve_topic(template: str, team_no: str) -> str:
 class EnvState:
     sicaklik: float = 23.5
     nem: float = 60.0
-    isik: float = 400.0
-    pm25: float = 18.0
     mq135_ppm_est: float = 1.5
     mq7_ppm_est: float = 2.0
     mq2_ppm_est: float = 2.5
@@ -53,7 +51,6 @@ class PublisherService:
         self.command_topic = resolve_topic(command_template, self.team_no)
 
         self.state = EnvState()
-        self.pm25_ema = self.state.pm25
         self.mq7_ema = self.state.mq7_ppm_est
         self.mq2_ema = self.state.mq2_ppm_est
         self.client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
@@ -107,9 +104,7 @@ class PublisherService:
     def update_simulated_sensors(self) -> None:
         s = self.state
 
-        # Basit bir günlük döngü yaklaşımı: isik artarsa ortam daha sıcak olma eğiliminde.
-        s.isik = self._clamp(s.isik + random.uniform(-45, 55), 120, 900)
-        sicaklik_target = 20.0 + (s.isik / 900.0) * 10.0
+        sicaklik_target = 24.0 + random.uniform(-1.0, 1.0)
         s.sicaklik = self._clamp(
             s.sicaklik + 0.18 * (sicaklik_target - s.sicaklik) + random.uniform(-0.35, 0.35),
             16.0,
@@ -122,15 +117,13 @@ class PublisherService:
             90.0,
         )
 
-        # PM2.5 ve gaz sensörlerinde zaman zaman kirli hava olayı simülasyonu.
+        # Gaz sensörlerinde zaman zaman kirli hava olayı simülasyonu.
         dirty_event = random.random() < 0.08
-        pm_noise = random.uniform(-2.5, 2.8) + (8.0 if dirty_event else 0.0)
         mq135_noise = random.uniform(-0.12, 0.15) + (1.4 if dirty_event else 0.0)
         mq7_noise = random.uniform(-0.22, 0.2) + (2.2 if dirty_event else 0.0)
         mq2_noise = random.uniform(-0.25, 0.3) + (2.8 if dirty_event else 0.0)
 
         fan_cleaning_factor = 0.18 if s.fan_on else 0.0
-        s.pm25 = self._clamp(s.pm25 + pm_noise - fan_cleaning_factor * s.pm25, 4.0, 180.0)
         s.mq135_ppm_est = self._clamp(
             s.mq135_ppm_est + mq135_noise - fan_cleaning_factor * s.mq135_ppm_est,
             0.5,
@@ -179,24 +172,21 @@ class PublisherService:
 
     def calculate_scores(self) -> Tuple[float, float]:
         s = self.state
-        pm25_n = min(s.pm25 / 120.0, 1.0)
         mq135_n = min(s.mq135_ppm_est / 12.0, 1.0)
         mq7_n = min(s.mq7_ppm_est / 30.0, 1.0)
         mq2_n = min(s.mq2_ppm_est / 30.0, 1.0)
         nem_penalty = min(abs(s.nem - 55.0) / 40.0, 1.0)
 
         # Katman-1: anlik kural tabanli skor
-        rule_score = (0.34 * pm25_n) + (0.26 * mq7_n) + (0.2 * mq2_n) + (0.14 * mq135_n) + (0.06 * nem_penalty)
+        rule_score = (0.4 * mq7_n) + (0.3 * mq2_n) + (0.24 * mq135_n) + (0.06 * nem_penalty)
         rule_score = max(0.0, min(1.0, rule_score))
 
         # Katman-2: trend skoru (hafif YZ yaklasimi)
-        self.pm25_ema = self._ema(self.pm25_ema, s.pm25, alpha=0.28)
         self.mq7_ema = self._ema(self.mq7_ema, s.mq7_ppm_est, alpha=0.28)
         self.mq2_ema = self._ema(self.mq2_ema, s.mq2_ppm_est, alpha=0.28)
-        trend_pm25 = min(max((s.pm25 - self.pm25_ema + 30) / 60.0, 0.0), 1.0)
         trend_mq7 = min(max((s.mq7_ppm_est - self.mq7_ema + 8) / 16.0, 0.0), 1.0)
         trend_mq2 = min(max((s.mq2_ppm_est - self.mq2_ema + 8) / 16.0, 0.0), 1.0)
-        trend_score = (0.45 * trend_pm25) + (0.3 * trend_mq7) + (0.25 * trend_mq2)
+        trend_score = (0.55 * trend_mq7) + (0.45 * trend_mq2)
         trend_score = max(0.0, min(1.0, trend_score))
 
         final_score = (0.7 * rule_score) + (0.3 * trend_score)
@@ -227,8 +217,6 @@ class PublisherService:
             "values": {
                 "sicaklik": round(self.state.sicaklik, 2),
                 "nem": round(self.state.nem, 2),
-                "isik": round(self.state.isik, 2),
-                "pm25": round(self.state.pm25, 2),
                 "mq135_ppm_est": round(self.state.mq135_ppm_est, 3),
                 "mq7_ppm_est": round(self.state.mq7_ppm_est, 3),
                 "mq2_ppm_est": round(self.state.mq2_ppm_est, 3),

@@ -36,8 +36,6 @@ DB_FILE.parent.mkdir(parents=True, exist_ok=True)
 NUMERIC_FIELDS = [
     "sicaklik",
     "nem",
-    "isik",
-    "pm25",
     "mq135_ppm_est",
     "mq7_ppm_est",
     "mq2_ppm_est",
@@ -61,8 +59,6 @@ def init_db() -> None:
                 timestamp TEXT NOT NULL,
                 sicaklik REAL,
                 nem REAL,
-                isik REAL,
-                pm25 REAL,
                 mq135_ppm_est REAL,
                 mq7_ppm_est REAL,
                 mq2_ppm_est REAL,
@@ -114,8 +110,6 @@ def parse_payload(payload: Dict) -> Optional[Dict]:
             "timestamp": str(payload.get("timestamp", datetime.now(timezone.utc).isoformat())),
             "sicaklik": float(values.get("sicaklik", 0.0)),
             "nem": float(values.get("nem", 0.0)),
-            "isik": float(values.get("isik", 0.0)),
-            "pm25": float(values.get("pm25", 0.0)),
             "mq135_ppm_est": float(values.get("mq135_ppm_est", 0.0)),
             "mq7_ppm_est": float(values.get("mq7_ppm_est", 0.0)),
             "mq2_ppm_est": float(values.get("mq2_ppm_est", 0.0)),
@@ -136,18 +130,16 @@ def save_payload(record: Dict) -> None:
         conn.execute(
             """
             INSERT INTO telemetry (
-                sensor_id, timestamp, sicaklik, nem, isik, pm25,
+                sensor_id, timestamp, sicaklik, nem,
                 mq135_ppm_est, mq7_ppm_est, mq2_ppm_est, fan_on, fan_pwm,
                 buzzer_on, decision_score, trend_score, decision_mode, raw_json
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 record["sensor_id"],
                 record["timestamp"],
                 record["sicaklik"],
                 record["nem"],
-                record["isik"],
-                record["pm25"],
                 record["mq135_ppm_est"],
                 record["mq7_ppm_est"],
                 record["mq2_ppm_est"],
@@ -203,8 +195,6 @@ def rows_to_history(rows: List[sqlite3.Row]) -> List[Dict]:
                 "values": {
                     "sicaklik": row["sicaklik"],
                     "nem": row["nem"],
-                    "isik": row["isik"],
-                    "pm25": row["pm25"],
                     "mq135_ppm_est": row["mq135_ppm_est"],
                     "mq7_ppm_est": row["mq7_ppm_est"],
                     "mq2_ppm_est": row["mq2_ppm_est"],

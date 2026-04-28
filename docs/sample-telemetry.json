@@ -3,8 +3,6 @@
   "values": {
     "sicaklik": 24.5,
     "nem": 65,
-    "isik": 450,
-    "pm25": 28,
     "mq135_ppm_est": 2.1,
     "mq7_ppm_est": 5.0,
     "mq2_ppm_est": 6.8,
